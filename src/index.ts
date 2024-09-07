@@ -1,10 +1,10 @@
 "use strict";
 
-const LogSource = require("./lib/log-source");
-const Printer = require("./lib/printer");
+import LogSource from "./lib/log-source";
+import Printer from "./lib/printer";
 
-function runSolutions(sourceCount) {
-  return new Promise((resolve, reject) => {
+function runSolutions(sourceCount: number) {
+  return new Promise(async (resolve, reject) => {
     /**
      * Challenge Number 1!
      *
@@ -30,13 +30,14 @@ function runSolutions(sourceCount) {
       syncLogSources.push(new LogSource());
     }
     try {
-      require("./solution/sync-sorted-merge")(syncLogSources, new Printer());
-      resolve();
+      const syncSortedMerge = await import("./solution/sync-sorted-merge");
+      syncSortedMerge.default(syncLogSources, new Printer());
+      resolve(true);
     } catch (e) {
       reject(e);
     }
   }).then(() => {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       /**
        * Challenge Number 2!
        *
@@ -54,9 +55,13 @@ function runSolutions(sourceCount) {
       for (let i = 0; i < sourceCount; i++) {
         asyncLogSources.push(new LogSource());
       }
-      require("./solution/async-sorted-merge")(asyncLogSources, new Printer())
-        .then(resolve)
-        .catch(reject);
+      const asyncSortedMerge = await import("./solution/async-sorted-merge");
+      try {
+        asyncSortedMerge.default(asyncLogSources, new Printer());
+        resolve(true);
+      } catch (e) {
+        reject(e);
+      }
     });
   });
 }

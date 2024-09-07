@@ -11,7 +11,24 @@ const P = require("bluebird");
     will be in OO form - therefore - we simulate that interaction here.
 */
 
-module.exports = class LogSource {
+export interface LogEntryType {
+  date: Date;
+  msg: string;
+  sourceIndex?: number;
+}
+
+export interface LogSourceType {
+  drained: boolean;
+  last: LogEntryType;
+  getNextPseudoRandomEntry: () => LogEntryType;
+  pop: () => LogEntryType | boolean;
+  popAsync: () => Promise<LogEntryType | boolean>;
+}
+
+export default class LogSource implements LogSourceType {
+  drained: boolean;
+  last: LogEntryType;
+
   constructor() {
     this.drained = false;
     this.last = {
@@ -20,7 +37,7 @@ module.exports = class LogSource {
     };
   }
 
-  getNextPseudoRandomEntry() {
+  getNextPseudoRandomEntry(): LogEntryType {
     return {
       date: new Date(
         this.last.date.getTime() +
@@ -31,7 +48,7 @@ module.exports = class LogSource {
     };
   }
 
-  pop() {
+  pop(): LogEntryType | boolean {
     this.last = this.getNextPseudoRandomEntry();
     if (this.last.date > new Date()) {
       this.drained = true;
@@ -39,11 +56,11 @@ module.exports = class LogSource {
     return this.drained ? false : this.last;
   }
 
-  popAsync() {
+  popAsync(): Promise<LogEntryType | boolean> {
     this.last = this.getNextPseudoRandomEntry();
-    if (this.last.date > Date.now()) {
+    if (this.last.date > new Date()) {
       this.drained = true;
     }
     return P.delay(_.random(8)).then(() => (this.drained ? false : this.last));
   }
-};
+}
