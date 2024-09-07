@@ -1,8 +1,6 @@
-"use strict";
-
-const _ = require("lodash");
-const Faker = require("Faker");
-const P = require("bluebird");
+import _ from "lodash";
+import { faker } from "@faker-js/faker";
+import P from "bluebird";
 
 /*
     We don't like OOP - in fact - we despise it!
@@ -33,7 +31,7 @@ export default class LogSource implements LogSourceType {
     this.drained = false;
     this.last = {
       date: new Date(Date.now() - 1000 * 60 * 60 * 24 * _.random(40, 60)),
-      msg: Faker.Company.catchPhrase(),
+      msg: faker.company.catchPhrase(),
     };
   }
 
@@ -44,7 +42,7 @@ export default class LogSource implements LogSourceType {
           1000 * 60 * 60 * _.random(10) +
           _.random(1000 * 60)
       ),
-      msg: Faker.Company.catchPhrase(),
+      msg: faker.company.catchPhrase(),
     };
   }
 

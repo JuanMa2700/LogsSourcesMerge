@@ -14,11 +14,15 @@
   "license": "BSD-2-Clause",
   "dependencies": {
     "bluebird": "^3.4.1",
-    "Faker": "~0.7.0",
+    "heap": "^0.2.7",
     "lodash": "^4.13.1",
     "ts-node": "^10.9.2"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.0.0",
+    "@types/bluebird": "^3.5.42",
+    "@types/faker": "^6.6.9",
+    "@types/heap": "^0.2.34",
     "@types/jest": "^29.5.12",
     "@types/lodash": "^4.17.7",
     "@types/node": "^22.5.4",
